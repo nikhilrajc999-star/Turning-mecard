@@ -1,11 +1,14 @@
 import React from 'react';
 import { soundFx } from '../utils/audio';
+import { useData } from '../context/DataContext';
 
 interface PortalClimaxProps {
   onEnterWorld: () => void;
 }
 
 export const PortalClimax: React.FC<PortalClimaxProps> = ({ onEnterWorld }) => {
+  const { fornoxIgUrl } = useData();
+
   return (
     <section className="w-full py-24 md:py-32 relative bg-[#06030c] flex items-center justify-center overflow-hidden border-t border-b border-white/5">
       {/* Deep Cosmic Vortex Glow */}
@@ -48,12 +51,14 @@ export const PortalClimax: React.FC<PortalClimaxProps> = ({ onEnterWorld }) => {
 
           <a
             id="climax-fornox-link"
-            href="https://fornox.in"
+            href={fornoxIgUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-3.5 rounded-lg bg-[#231d2a]/90 text-[#f8fafc] font-headline text-sm md:text-base uppercase tracking-wider backdrop-blur-xl hover:bg-[#3d3744] hover:text-[#7bd0ff] transition-all border border-white/15"
+            title="Open FORNOX Instagram profile"
+            className="px-8 py-3.5 rounded-lg bg-[#231d2a]/90 text-[#f8fafc] font-headline text-sm md:text-base uppercase tracking-wider backdrop-blur-xl hover:bg-[#3d3744] hover:text-[#7bd0ff] transition-all border border-white/15 flex items-center justify-center gap-2 cursor-pointer"
           >
-            EXPLORE FORNOX (FORNOX.IN)
+            <span>CONNECT ON INSTAGRAM</span>
+            <span className="material-symbols-outlined text-[18px]">open_in_new</span>
           </a>
         </div>
       </div>

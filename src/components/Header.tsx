@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LOGO_URL } from '../data/mecardData';
 import { soundFx } from '../utils/audio';
+import { useData } from '../context/DataContext';
 
 interface HeaderProps {
   activeSection: string;
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   isMuted,
   onToggleMute,
 }) => {
+  const { openAdminPanel, isAdminAuthenticated, fornoxIgUrl } = useData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -74,10 +76,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* FORNOX Verification Chip */}
           <a
             id="fornox-badge-chip"
-            href="https://fornox.in"
+            href={fornoxIgUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden xl:flex items-center gap-2 px-3 py-1 bg-[#0d071a]/90 rounded-full border border-[#a855f7]/30 shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:border-[#38bdf8] transition-colors"
+            title={`Open FORNOX Instagram (${fornoxIgUrl})`}
+            className="hidden xl:flex items-center gap-2 px-3 py-1 bg-[#0d071a]/90 rounded-full border border-[#a855f7]/30 shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:border-[#38bdf8] transition-colors cursor-pointer"
           >
             <span className="w-2 h-2 rounded-full bg-[#2dd4bf] animate-ping" />
             <span className="font-mono text-[10px] text-[#7bd0ff] tracking-widest uppercase font-semibold">
@@ -130,6 +133,29 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </button>
 
+          {/* Admin Panel Launcher */}
+          <button
+            id="admin-console-trigger"
+            type="button"
+            onClick={() => {
+              soundFx.playBeep(isAdminAuthenticated ? 980 : 800, 0.08);
+              openAdminPanel();
+            }}
+            title={isAdminAuthenticated ? "Admin Command Console (Active)" : "Access Admin Command Terminal"}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border font-mono text-xs uppercase tracking-wider transition-all cursor-pointer ${
+              isAdminAuthenticated
+                ? 'bg-[#a855f7]/20 border-[#a855f7] text-[#ddb7ff] shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:bg-[#a855f7]/30'
+                : 'bg-[#1f1926] border-white/10 text-[#94a3b8] hover:text-[#38bdf8] hover:border-[#38bdf8]/40'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">
+              {isAdminAuthenticated ? 'admin_panel_settings' : 'lock'}
+            </span>
+            <span className="hidden sm:inline font-bold">
+              {isAdminAuthenticated ? 'ADMIN ACTIVE' : 'ADMIN'}
+            </span>
+          </button>
+
           {/* User / Terminal Status Indicator */}
           <div
             id="user-status-indicator"
@@ -173,6 +199,25 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <span className="font-mono text-[10px] text-[#94a3b8]">FORNOX TAC-SYS</span>
           </div>
+
+          {/* Mobile Admin Link */}
+          <button
+            id="mobile-admin-trigger"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              openAdminPanel();
+            }}
+            className="flex items-center justify-between px-3 py-2.5 rounded bg-[#1f1926] border border-[#a855f7]/30 text-left font-mono text-xs uppercase tracking-wider text-[#ddb7ff] mb-2 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+              <span>ADMIN CONSOLE</span>
+            </div>
+            <span className="text-[10px] text-[#2dd4bf] font-bold">
+              {isAdminAuthenticated ? 'OVERRIDE ON' : 'LOGIN'}
+            </span>
+          </button>
+
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -189,12 +234,12 @@ export const Header: React.FC<HeaderProps> = ({
           ))}
           <div className="pt-3 mt-2 border-t border-white/10 flex justify-between items-center text-[11px] font-mono text-[#94a3b8]">
             <a
-              href="https://fornox.in"
+              href={fornoxIgUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#7bd0ff] hover:underline"
+              className="text-[#7bd0ff] hover:underline flex items-center gap-1"
             >
-              FORNOX.IN ↗
+              <span>FORNOX IG ↗</span>
             </a>
             <span className="text-[#2dd4bf]">GRID: STABLE</span>
           </div>

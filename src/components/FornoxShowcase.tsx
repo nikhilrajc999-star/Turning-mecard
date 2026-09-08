@@ -1,6 +1,10 @@
 import React from 'react';
+import { useData } from '../context/DataContext';
 
 export const FornoxShowcase: React.FC = () => {
+  const { fornoxIgUrl } = useData();
+  const displayLabel = fornoxIgUrl.replace(/^https?:\/\/(www\.)?/, '');
+
   return (
     <section id="fornox" className="w-full py-20 md:py-28 relative bg-[#140c26]">
       <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
@@ -16,9 +20,14 @@ export const FornoxShowcase: React.FC = () => {
                 <span className="px-3 py-1 rounded bg-[#7bd0ff]/20 text-[#7bd0ff] font-mono text-xs uppercase font-bold tracking-widest border border-[#7bd0ff]/30">
                   DIGITAL ARCHITECTS
                 </span>
-                <span className="font-mono text-xs text-[#94a3b8]">
-                  // fornox.in
-                </span>
+                <a
+                  href={fornoxIgUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-[#94a3b8] hover:text-[#38bdf8] transition-colors"
+                >
+                  // {displayLabel}
+                </a>
               </div>
 
               <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase text-[#f8fafc] tracking-tight">
@@ -36,12 +45,12 @@ export const FornoxShowcase: React.FC = () => {
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <a
                   id="fornox-visit-btn"
-                  href="https://fornox.in"
+                  href={fornoxIgUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3.5 rounded-lg bg-[#38bdf8] text-[#06030c] font-headline text-sm uppercase font-bold tracking-wider hover:bg-[#7bd0ff] transition-all duration-300 shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2"
+                  className="px-6 py-3.5 rounded-lg bg-[#38bdf8] text-[#06030c] font-headline text-sm uppercase font-bold tracking-wider hover:bg-[#7bd0ff] transition-all duration-300 shadow-[0_0_20px_rgba(56,189,248,0.5)] flex items-center gap-2 cursor-pointer"
                 >
-                  <span>VISIT FORNOX</span>
+                  <span>VISIT FORNOX (INSTAGRAM)</span>
                   <span className="material-symbols-outlined text-[18px]">
                     open_in_new
                   </span>
@@ -49,12 +58,13 @@ export const FornoxShowcase: React.FC = () => {
 
                 <a
                   id="fornox-portfolio-btn"
-                  href="https://fornox.in"
+                  href={fornoxIgUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3.5 rounded-lg bg-[#231d2a] text-[#f8fafc] font-headline text-sm uppercase tracking-wider hover:bg-[#3d3744] hover:text-[#7bd0ff] transition-all border border-white/10"
+                  className="px-6 py-3.5 rounded-lg bg-[#231d2a] text-[#f8fafc] font-headline text-sm uppercase tracking-wider hover:bg-[#3d3744] hover:text-[#7bd0ff] transition-all border border-white/10 flex items-center gap-2 cursor-pointer"
                 >
-                  EXPLORE STUDIO PORTFOLIO
+                  <span>OPEN CREATOR IG</span>
+                  <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
                 </a>
               </div>
             </div>
@@ -81,16 +91,16 @@ export const FornoxShowcase: React.FC = () => {
 
               <div className="p-4 rounded-xl bg-[#06030c]/80 backdrop-blur-md border border-white/10">
                 <span className="text-[10px] text-[#94a3b8] block uppercase tracking-wider">
-                  OFFICIAL PORTAL
+                  OFFICIAL CREATOR INSTAGRAM
                 </span>
                 <a
-                  href="https://fornox.in"
+                  href={fornoxIgUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-headline text-base md:text-lg text-[#2dd4bf] font-bold hover:underline flex items-center gap-1.5"
                 >
-                  <span>fornox.in</span>
-                  <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+                  <span className="truncate max-w-[200px]">{displayLabel}</span>
+                  <span className="material-symbols-outlined text-[16px] shrink-0">arrow_outward</span>
                 </a>
               </div>
             </div>

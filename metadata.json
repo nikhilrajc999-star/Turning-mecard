@@ -2,5 +2,7 @@
   "name": "TURNING MECARD",
   "description": "Cybernetic Void Portal & Battle Console for Turning Mecard. Explore characters, Mecardimal codex, factions, episodes, and real-time battle simulations created by FORNOX.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

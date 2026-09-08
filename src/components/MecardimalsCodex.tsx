@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MECARDIMALS } from '../data/mecardData';
+import { useData } from '../context/DataContext';
 import { Mecardimal } from '../types';
 import { HoloCard } from './HoloCard';
 import { soundFx } from '../utils/audio';
@@ -11,12 +11,13 @@ interface MecardimalsCodexProps {
 export const MecardimalsCodex: React.FC<MecardimalsCodexProps> = ({
   onOpenTelemetry,
 }) => {
+  const { mecardimals, openAdminPanel, isAdminAuthenticated } = useData();
   const [filterRank, setFilterRank] = useState<string>('ALL');
 
   const filteredMecardimals =
     filterRank === 'ALL'
-      ? MECARDIMALS
-      : MECARDIMALS.filter((m) => m.rank.includes(filterRank));
+      ? mecardimals
+      : mecardimals.filter((m) => m.rank.includes(filterRank));
 
   return (
     <section id="mecardimals" className="w-full py-20 md:py-28 relative bg-[#140c26]">
@@ -31,9 +32,23 @@ export const MecardimalsCodex: React.FC<MecardimalsCodexProps> = ({
               THE MECARDIMAL CODEX
             </h2>
           </div>
-          <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
-            Tactical vehicle units capable of instantaneous kinetic expansion upon contacting magnetic battle cards.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
+              Tactical vehicle units capable of instantaneous kinetic expansion upon contacting magnetic battle cards.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playBeep(920, 0.05);
+                openAdminPanel();
+              }}
+              title="Open Admin Panel to add or modify Mecardimals"
+              className="px-3 py-1.5 rounded-lg bg-[#0d071a] hover:bg-[#1f1926] text-[#38bdf8] border border-[#38bdf8]/40 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">tune</span>
+              <span>{isAdminAuthenticated ? 'MANAGE CODEX' : 'ADMIN EDIT'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Filter Bar */}

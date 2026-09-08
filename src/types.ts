@@ -92,3 +92,31 @@ export interface GalleryItem {
   description: string;
   spanCol?: string;
 }
+
+export interface BattleConfig {
+  playerUnitName: string;
+  playerPilot: string;
+  playerMaxHp: number;
+  playerImgUrl: string;
+  playerPower: number;
+  playerSpeed: number;
+  playerDefense: number;
+  strikeDamage: number;
+  specialDamage: number;
+  enemyUnitName: string;
+  enemyFaction: string;
+  enemyMaxHp: number;
+  enemyImgUrl: string;
+  enemyPower: number;
+  enemySpeed: number;
+  enemyDefense: number;
+  enemyCounterDamage: number;
+}
+
+export interface AdminLog {
+  id: string;
+  timestamp: string;
+  action: string;
+  category: 'MECARDIMAL' | 'TAMER' | 'EPISODE' | 'GALLERY' | 'BATTLE' | 'SYSTEM';
+  details: string;
+}

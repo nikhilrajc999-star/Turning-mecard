@@ -1,5 +1,5 @@
 import React from 'react';
-import { EPISODES } from '../data/mecardData';
+import { useData } from '../context/DataContext';
 import { Episode } from '../types';
 import { HoloCard } from './HoloCard';
 import { soundFx } from '../utils/audio';
@@ -9,6 +9,8 @@ interface EpisodesHubProps {
 }
 
 export const EpisodesHub: React.FC<EpisodesHubProps> = ({ onPlayEpisode }) => {
+  const { episodes, openAdminPanel, isAdminAuthenticated } = useData();
+
   const handlePlay = (ep: Episode) => {
     soundFx.playBeep(1100, 0.08);
     onPlayEpisode(ep);
@@ -27,14 +29,28 @@ export const EpisodesHub: React.FC<EpisodesHubProps> = ({ onPlayEpisode }) => {
               STREAMING TRANSMISSIONS
             </h2>
           </div>
-          <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
-            High-definition tactical anime episodes. Relive the defining confrontations and character awakenings.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
+              High-definition tactical anime episodes. Relive the defining confrontations and character awakenings.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playBeep(920, 0.05);
+                openAdminPanel();
+              }}
+              title="Open Admin Panel to manage episodes"
+              className="px-3 py-1.5 rounded-lg bg-[#0d071a] hover:bg-[#1f1926] text-[#2dd4bf] border border-[#2dd4bf]/40 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">video_settings</span>
+              <span>{isAdminAuthenticated ? 'MANAGE EPISODES' : 'ADMIN EDIT'}</span>
+            </button>
+          </div>
         </div>
 
-        {/* Episode Cards Grid (3 Episodes) */}
+        {/* Episode Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {EPISODES.map((ep) => (
+          {episodes.map((ep) => (
             <HoloCard
               key={ep.id}
               onClick={() => handlePlay(ep)}

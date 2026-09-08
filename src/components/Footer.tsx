@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { soundFx } from '../utils/audio';
+import { useData } from '../context/DataContext';
 
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const { fornoxIgUrl } = useData();
   const [latency, setLatency] = useState<number>(12);
+  const displayLabel = fornoxIgUrl.replace(/^https?:\/\/(www\.)?/, '');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -137,14 +140,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-mono text-xs text-[#2dd4bf] uppercase tracking-widest font-bold">
               // STUDIO FORNOX
             </h4>
-            <p className="font-body text-xs text-[#94a3b8]">Official creative studio portal:</p>
+            <p className="font-body text-xs text-[#94a3b8]">Official creator Instagram profile:</p>
             <a
-              href="https://fornox.in"
+              href={fornoxIgUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block font-mono text-sm text-[#38bdf8] hover:underline font-bold"
+              className="inline-flex items-center gap-1 font-mono text-sm text-[#38bdf8] hover:underline font-bold"
             >
-              https://fornox.in →
+              <span>{displayLabel}</span>
+              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
             </a>
             <p className="font-mono text-[10px] text-[#94a3b8] mt-2">
               DESIGNED & DEVELOPED BY FORNOX STUDIO
@@ -164,12 +168,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <p className="font-mono text-xs text-[#94a3b8]">
               OFFICIAL TURNING MECARD PORTAL •{' '}
               <a
-                href="https://fornox.in"
+                href={fornoxIgUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#7bd0ff] hover:text-[#ddb7ff] transition-colors"
+                className="text-[#7bd0ff] hover:text-[#ddb7ff] transition-colors inline-flex items-center gap-1"
               >
-                fornox.in
+                <span>{displayLabel}</span>
+                <span className="material-symbols-outlined text-[12px]">open_in_new</span>
               </a>
             </p>
           </div>
@@ -217,7 +222,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Legal & Copyright Bar */}
         <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-3 font-mono text-[11px] text-[#94a3b8]">
-          <p>© 2026 FORNOX. All rights reserved. Website: <a href="https://fornox.in" target="_blank" rel="noopener noreferrer" className="text-[#7bd0ff] hover:underline">fornox.in</a></p>
+          <p>© 2026 FORNOX. All rights reserved. Creator Profile: <a href={fornoxIgUrl} target="_blank" rel="noopener noreferrer" className="text-[#7bd0ff] hover:underline">{displayLabel}</a></p>
           <div className="flex flex-wrap items-center gap-4 uppercase">
             <span className="text-[#94a3b8]">NEURAL DIRECTIVE</span>
             <span className="text-[#94a3b8]">•</span>

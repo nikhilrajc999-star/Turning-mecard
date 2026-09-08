@@ -3,6 +3,7 @@ import { HERO_EVAN_IMG } from '../data/mecardData';
 import { CosmicShader } from './CosmicShader';
 import { HoloCard } from './HoloCard';
 import { soundFx } from '../utils/audio';
+import { useData } from '../context/DataContext';
 
 interface HeroProps {
   onExploreMecardimals: () => void;
@@ -13,6 +14,8 @@ export const Hero: React.FC<HeroProps> = ({
   onExploreMecardimals,
   onExploreWorld,
 }) => {
+  const { fornoxIgUrl } = useData();
+
   return (
     <section
       id="hero"
@@ -40,12 +43,14 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
             <a
               id="hero-fornox-link"
-              href="https://fornox.in"
+              href={fornoxIgUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1 rounded-full bg-[#1f1926]/80 text-[#cfc2d6] font-mono text-[11px] tracking-widest hover:text-[#38bdf8] hover:bg-[#231d2a] border border-white/10 transition-all"
+              title="Open @fornox.in on Instagram"
+              className="px-3 py-1 rounded-full bg-[#1f1926]/80 text-[#cfc2d6] font-mono text-[11px] tracking-widest hover:text-[#38bdf8] hover:bg-[#231d2a] border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              FORNOX.IN // V-2026.04
+              <span>FORNOX // @fornox.in</span>
+              <span className="material-symbols-outlined text-[12px]">open_in_new</span>
             </a>
           </div>
 

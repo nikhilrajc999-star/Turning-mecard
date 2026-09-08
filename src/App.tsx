@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { DataProvider } from './context/DataContext';
+import { AdminPanel } from './components/AdminPanel';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { WorldAtlas } from './components/WorldAtlas';
@@ -90,78 +92,85 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#06030c] text-[#eadff0] font-body selection:bg-[#a855f7] selection:text-[#06030c] relative">
-      {/* Top Header Nav */}
-      <Header
-        activeSection={activeSection}
-        onNavigate={scrollToSection}
-        isMuted={isMuted}
-        onToggleMute={handleToggleMute}
-      />
-
-      {/* Main Sections */}
-      <main className="w-full">
-        {/* Section 00: Hero */}
-        <Hero
-          onExploreMecardimals={() => scrollToSection('mecardimals')}
-          onExploreWorld={() => scrollToSection('world')}
+    <DataProvider>
+      <div className="min-h-screen w-full bg-[#06030c] text-[#eadff0] font-body selection:bg-[#a855f7] selection:text-[#06030c] relative">
+        {/* Top Header Nav */}
+        <Header
+          activeSection={activeSection}
+          onNavigate={scrollToSection}
+          isMuted={isMuted}
+          onToggleMute={handleToggleMute}
         />
 
-        {/* Section 01: World Atlas */}
-        <WorldAtlas />
+        {/* Main Sections */}
+        <main className="w-full">
+          {/* Section 00: Hero */}
+          <Hero
+            onExploreMecardimals={() => scrollToSection('mecardimals')}
+            onExploreWorld={() => scrollToSection('world')}
+          />
 
-        {/* Section 02: Characters */}
-        <Characters />
+          {/* Section 01: World Atlas */}
+          <WorldAtlas />
 
-        {/* Section 03: Mecardimals Codex */}
-        <MecardimalsCodex onOpenTelemetry={(mec) => setTelemetryMecardimal(mec)} />
+          {/* Section 02: Characters */}
+          <Characters />
 
-        {/* Section 04: Transformation Matrix */}
-        <TransformationMatrix />
+          {/* Section 03: Mecardimals Codex */}
+          <MecardimalsCodex onOpenTelemetry={(mec) => setTelemetryMecardimal(mec)} />
 
-        {/* Section 05: Factions */}
-        <Factions />
+          {/* Section 04: Transformation Matrix */}
+          <TransformationMatrix />
 
-        {/* Section 06: Battle Console */}
-        <BattleConsole />
+          {/* Section 05: Factions */}
+          <Factions />
 
-        {/* Section 07: Story Chronicles */}
-        <StoryChronicles />
+          {/* Section 06: Battle Console */}
+          <BattleConsole />
 
-        {/* Section 08: Episodes Streaming Hub */}
-        <EpisodesHub onPlayEpisode={(ep) => setPlayingEpisode(ep)} />
+          {/* Section 07: Story Chronicles */}
+          <StoryChronicles />
 
-        {/* Section 09: Tactical Art Gallery */}
-        <Gallery onOpenLightbox={(art) => setLightboxItem(art)} />
+          {/* Section 08: Episodes Streaming Hub */}
+          <EpisodesHub onPlayEpisode={(ep) => setPlayingEpisode(ep)} />
 
-        {/* Section 10: Creative Process */}
-        <CreativeProcess />
+          {/* Section 09: Tactical Art Gallery */}
+          <Gallery onOpenLightbox={(art) => setLightboxItem(art)} />
 
-        {/* Section 11: Created by FORNOX Studio Showcase */}
-        <FornoxShowcase />
+          {/* Section 10: Creative Process */}
+          <CreativeProcess />
 
-        {/* Section 12: Final Portal Overdrive CTA */}
-        <PortalClimax onEnterWorld={() => scrollToSection('mecardimals')} />
-      </main>
+          {/* Section 11: Created by FORNOX Studio Showcase */}
+          <FornoxShowcase />
 
-      {/* Section 13: Live Status Footer */}
-      <Footer onNavigate={scrollToSection} />
+          {/* Section 12: Final Portal Overdrive CTA */}
+          <PortalClimax onEnterWorld={() => scrollToSection('mecardimals')} />
+        </main>
 
-      {/* Modals */}
-      <TelemetryModal
-        mecardimal={telemetryMecardimal}
-        onClose={() => setTelemetryMecardimal(null)}
-      />
+        {/* Section 13: Live Status Footer */}
+        <Footer onNavigate={scrollToSection} />
 
-      <EpisodePlayerModal
-        episode={playingEpisode}
-        onClose={() => setPlayingEpisode(null)}
-      />
+        {/* Telemetry Modal */}
+        <TelemetryModal
+          mecardimal={telemetryMecardimal}
+          onClose={() => setTelemetryMecardimal(null)}
+        />
 
-      <LightboxModal
-        item={lightboxItem}
-        onClose={() => setLightboxItem(null)}
-      />
-    </div>
+        {/* Video Player Modal */}
+        <EpisodePlayerModal
+          episode={playingEpisode}
+          onClose={() => setPlayingEpisode(null)}
+        />
+
+        {/* Gallery Lightbox Modal */}
+        <LightboxModal
+          item={lightboxItem}
+          onClose={() => setLightboxItem(null)}
+        />
+
+        {/* Admin Command Console Modal */}
+        <AdminPanel />
+      </div>
+    </DataProvider>
   );
 }

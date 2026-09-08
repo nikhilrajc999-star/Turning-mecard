@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CHARACTERS } from '../data/mecardData';
+import { useData } from '../context/DataContext';
 import { Character } from '../types';
 import { HoloCard } from './HoloCard';
 import { soundFx } from '../utils/audio';
@@ -9,6 +9,7 @@ interface CharactersProps {
 }
 
 export const Characters: React.FC<CharactersProps> = ({ onSelectCharacter }) => {
+  const { characters, openAdminPanel, isAdminAuthenticated } = useData();
   const [activePilot, setActivePilot] = useState<Character | null>(null);
 
   const handleCardClick = (char: Character) => {
@@ -62,14 +63,28 @@ export const Characters: React.FC<CharactersProps> = ({ onSelectCharacter }) => 
               THE TAMER ELITE
             </h2>
           </div>
-          <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
-            Synchronized pilot operators wielding bio-mechanical resonance to activate dormant war machines.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
+              Synchronized pilot operators wielding bio-mechanical resonance to activate dormant war machines.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playBeep(920, 0.05);
+                openAdminPanel();
+              }}
+              title="Open Admin Panel to manage tamers"
+              className="px-3 py-1.5 rounded-lg bg-[#0d071a] hover:bg-[#1f1926] text-[#a855f7] border border-[#a855f7]/40 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">manage_accounts</span>
+              <span>{isAdminAuthenticated ? 'MANAGE TAMERS' : 'ADMIN EDIT'}</span>
+            </button>
+          </div>
         </div>
 
-        {/* Character Showcase Grid (5 Cards) */}
+        {/* Character Showcase Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 perspective-card-wrapper">
-          {CHARACTERS.map((char) => (
+          {characters.map((char) => (
             <HoloCard
               key={char.id}
               onClick={() => handleCardClick(char)}

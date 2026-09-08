@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { BATTLE_EVAN_HEADSHOT, BATTLE_ENEMY_HEADSHOT } from '../data/mecardData';
 import { soundFx } from '../utils/audio';
+import { useData } from '../context/DataContext';
 
 export const BattleConsole: React.FC = () => {
-  const [playerHp, setPlayerHp] = useState<number>(100);
-  const [enemyHp, setEnemyHp] = useState<number>(100);
+  const { battleConfig, openAdminPanel, isAdminAuthenticated } = useData();
+  const [playerHp, setPlayerHp] = useState<number>(battleConfig.playerMaxHp);
+  const [enemyHp, setEnemyHp] = useState<number>(battleConfig.enemyMaxHp);
   const [battleLog, setBattleLog] = useState<string>(
     '> READY: SELECT TACTICAL COMMAND TO COMMENCE STRIKE'
   );
@@ -17,26 +18,26 @@ export const BattleConsole: React.FC = () => {
     soundFx.playLaser();
     setClashEffect('laser');
 
-    const damage = 25;
+    const damage = battleConfig.strikeDamage || 25;
     const newEnemyHp = Math.max(0, enemyHp - damage);
     setEnemyHp(newEnemyHp);
 
-    setBattleLog('> STRIKE DEPLOYED: EVAN INFLICTED 2450 DAMAGE WITH LIGHTNING TALON!');
+    setBattleLog(`> STRIKE DEPLOYED: ${battleConfig.playerUnitName} INFLICTED ${damage * 100} DAMAGE WITH LIGHTNING TALON!`);
 
     setTimeout(() => {
       setClashEffect(null);
       if (newEnemyHp <= 0) {
         setBattleLog(
-          '> VICTORY: VOID CORRUPTOR RETRACTED INTO MINI-CHASSIS! BLUE CITY DOMINANCE CONFIRMED.'
+          `> VICTORY: ${battleConfig.enemyUnitName} RETRACTED INTO MINI-CHASSIS! ALLIED DOMINANCE CONFIRMED.`
         );
         setIsAttacking(false);
       } else {
-        // Enemy retaliates with minor damage
-        const counterDmg = 12;
+        // Enemy retaliates
+        const counterDmg = battleConfig.enemyCounterDamage || 12;
         const newPlayerHp = Math.max(0, playerHp - counterDmg);
         setPlayerHp(newPlayerHp);
         setBattleLog(
-          '> ENEMY RETALIATION: VOID PULSE GRAVITY INFLICTS 1150 DAMAGE TO EVAN HULL!'
+          `> ENEMY RETALIATION: ${battleConfig.enemyUnitName} INFLICTS ${counterDmg * 95} DAMAGE TO ALLY HULL!`
         );
         setIsAttacking(false);
       }
@@ -49,25 +50,25 @@ export const BattleConsole: React.FC = () => {
     soundFx.playOverdrive();
     setClashEffect('overdrive');
 
-    const damage = 60;
+    const damage = battleConfig.specialDamage || 60;
     const newEnemyHp = Math.max(0, enemyHp - damage);
     setEnemyHp(newEnemyHp);
 
-    setBattleLog('> CRITICAL OVERDRIVE: BLIZZARD SLASH DEPLOYED! 5880 DAMAGE!');
+    setBattleLog(`> CRITICAL OVERDRIVE: BLIZZARD SLASH DEPLOYED! ${damage * 98} DAMAGE!`);
 
     setTimeout(() => {
       setClashEffect(null);
       if (newEnemyHp <= 0) {
         setBattleLog(
-          '> TOTAL DOMINANCE: ENEMY SHIELD CORE SHATTERED! DIMENSIONAL OVERLOAD DEFEATED.'
+          `> TOTAL DOMINANCE: ${battleConfig.enemyUnitName} SHIELD CORE SHATTERED! OVERLOAD DEFEATED.`
         );
         setIsAttacking(false);
       } else {
-        const counterDmg = 18;
+        const counterDmg = Math.round((battleConfig.enemyCounterDamage || 15) * 1.3);
         const newPlayerHp = Math.max(0, playerHp - counterDmg);
         setPlayerHp(newPlayerHp);
         setBattleLog(
-          '> SHADOW DESPERATION: VOID CORRUPTOR DISCHARGES UNSTABLE ANTIMATTER BURST!'
+          `> SHADOW DESPERATION: ${battleConfig.enemyUnitName} DISCHARGES UNSTABLE ANTIMATTER BURST!`
         );
         setIsAttacking(false);
       }
@@ -76,8 +77,8 @@ export const BattleConsole: React.FC = () => {
 
   const handleReset = () => {
     soundFx.playReset();
-    setEnemyHp(100);
-    setPlayerHp(100);
+    setEnemyHp(battleConfig.enemyMaxHp);
+    setPlayerHp(battleConfig.playerMaxHp);
     setBattleLog('> ARENA RESET: COMBAT ENGINES SYNCHRONIZED AT 100%');
     setClashEffect(null);
     setIsAttacking(false);
@@ -96,9 +97,23 @@ export const BattleConsole: React.FC = () => {
               MECARD BATTLE CONSOLE
             </h2>
           </div>
-          <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
-            Execute live combat algorithms, deploy tactical card boosters, and unleash final overdrive attacks.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
+              Execute live combat algorithms, deploy tactical card boosters, and unleash final overdrive attacks.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playBeep(920, 0.05);
+                openAdminPanel();
+              }}
+              title="Open Admin Panel to adjust arena combat parameters"
+              className="px-3 py-1.5 rounded-lg bg-[#0d071a] hover:bg-[#1f1926] text-[#ffb4ab] border border-[#ffb4ab]/40 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">tune</span>
+              <span>{isAdminAuthenticated ? 'ARENA CONFIG' : 'ADMIN OVERRIDE'}</span>
+            </button>
+          </div>
         </div>
 
         {/* High Tech Arena Simulator Deck */}
@@ -129,17 +144,17 @@ export const BattleConsole: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-xl bg-[#231d2a] border border-[#38bdf8]/40 overflow-hidden shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.3)]">
                   <img
-                    src={BATTLE_EVAN_HEADSHOT}
-                    alt="Evan"
+                    src={battleConfig.playerImgUrl}
+                    alt={battleConfig.playerUnitName}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
                   <h3 className="font-headline text-lg md:text-xl text-[#f8fafc] font-bold">
-                    EVAN (OVERDRIVE)
+                    {battleConfig.playerUnitName}
                   </h3>
                   <span className="font-mono text-xs text-[#7bd0ff]">
-                    PILOT: JASON [BLUE CITY]
+                    PILOT: {battleConfig.playerPilot}
                   </span>
                 </div>
               </div>
@@ -168,19 +183,19 @@ export const BattleConsole: React.FC = () => {
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">PWR</span>
                   <span className="text-xs md:text-sm font-bold text-[#38bdf8]">
-                    9800
+                    {battleConfig.playerPower}
                   </span>
                 </div>
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">SPD</span>
                   <span className="text-xs md:text-sm font-bold text-[#a855f7]">
-                    9200
+                    {battleConfig.playerSpeed}
                   </span>
                 </div>
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">DEF</span>
                   <span className="text-xs md:text-sm font-bold text-[#2dd4bf]">
-                    9500
+                    {battleConfig.playerDefense}
                   </span>
                 </div>
               </div>
@@ -199,7 +214,7 @@ export const BattleConsole: React.FC = () => {
               </span>
             </div>
 
-            {/* Right Combatant: Void Corruptor (Enemy Unit) */}
+            {/* Right Combatant: Enemy Unit */}
             <div className="lg:col-span-5 p-5 md:p-6 rounded-xl bg-[#1f1926]/90 border border-white/10 flex flex-col gap-4 shadow-lg">
               <div className="flex items-center justify-between font-mono text-xs">
                 <span className="text-[#ffb4ab] uppercase font-bold">
@@ -213,17 +228,17 @@ export const BattleConsole: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-xl bg-[#231d2a] border border-[#ffb4ab]/40 overflow-hidden shrink-0 shadow-[0_0_15px_rgba(255,180,171,0.3)]">
                   <img
-                    src={BATTLE_ENEMY_HEADSHOT}
-                    alt="Void Corruptor"
+                    src={battleConfig.enemyImgUrl}
+                    alt={battleConfig.enemyUnitName}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
                   <h3 className="font-headline text-lg md:text-xl text-[#f8fafc] font-bold">
-                    VOID CORRUPTOR
+                    {battleConfig.enemyUnitName}
                   </h3>
                   <span className="font-mono text-xs text-[#ddb7ff]">
-                    FACTION: BLACK MIRROR
+                    FACTION: {battleConfig.enemyFaction}
                   </span>
                 </div>
               </div>
@@ -252,19 +267,19 @@ export const BattleConsole: React.FC = () => {
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">PWR</span>
                   <span className="text-xs md:text-sm font-bold text-[#ffb4ab]">
-                    9400
+                    {battleConfig.enemyPower}
                   </span>
                 </div>
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">SPD</span>
                   <span className="text-xs md:text-sm font-bold text-[#f59e0b]">
-                    9100
+                    {battleConfig.enemySpeed}
                   </span>
                 </div>
                 <div className="bg-[#06030c] p-2 rounded border border-white/5">
                   <span className="text-[10px] text-[#94a3b8] block">DEF</span>
                   <span className="text-xs md:text-sm font-bold text-[#ddb7ff]">
-                    8900
+                    {battleConfig.enemyDefense}
                   </span>
                 </div>
               </div>
@@ -325,3 +340,4 @@ export const BattleConsole: React.FC = () => {
     </section>
   );
 };
+

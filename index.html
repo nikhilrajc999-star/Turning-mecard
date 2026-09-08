@@ -3,6 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Safeguard against environments where window.fetch is configured with only a getter -->
+    <script>
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var fetchHandler = originalFetch ? originalFetch.bind(window) : undefined;
+          
+          try {
+            Object.defineProperty(window, 'fetch', {
+              get: function() {
+                return fetchHandler;
+              },
+              set: function(newFetch) {
+                fetchHandler = newFetch;
+              },
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {}
+
+          if (window.Window && window.Window.prototype) {
+            try {
+              Object.defineProperty(window.Window.prototype, 'fetch', {
+                get: function() {
+                  return fetchHandler;
+                },
+                set: function(newFetch) {
+                  fetchHandler = newFetch;
+                },
+                configurable: true,
+                enumerable: true
+              });
+            } catch (e) {}
+          }
+        } catch (err) {}
+
+        window.addEventListener('error', function(event) {
+          if (event && event.message && typeof event.message === 'string' && event.message.indexOf('fetch') !== -1 && event.message.indexOf('getter') !== -1) {
+            event.preventDefault();
+            event.stopPropagation();
+            return true;
+          }
+        }, true);
+      })();
+    </script>
     <title>TURNING MECARD</title>
     <meta name="description" content="Cybernetic Void Portal & Battle Console for Turning Mecard. Explore characters, Mecardimal codex, factions, episodes, and real-time battle simulations created by FORNOX." />
     <meta property="og:title" content="TURNING MECARD" />

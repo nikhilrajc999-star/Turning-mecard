@@ -1,5 +1,5 @@
 import React from 'react';
-import { GALLERY_ITEMS } from '../data/mecardData';
+import { useData } from '../context/DataContext';
 import { GalleryItem } from '../types';
 import { HoloCard } from './HoloCard';
 import { soundFx } from '../utils/audio';
@@ -9,6 +9,8 @@ interface GalleryProps {
 }
 
 export const Gallery: React.FC<GalleryProps> = ({ onOpenLightbox }) => {
+  const { galleryItems, openAdminPanel, isAdminAuthenticated } = useData();
+
   const handleClick = (item: GalleryItem) => {
     soundFx.playBeep(980, 0.06);
     onOpenLightbox(item);
@@ -27,14 +29,28 @@ export const Gallery: React.FC<GalleryProps> = ({ onOpenLightbox }) => {
               TACTICAL ARTWORKS
             </h2>
           </div>
-          <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
-            Curated visual collection of mecha blueprints, battle arenas, card illustrations, and concept production art.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="font-body text-sm md:text-base text-[#94a3b8] max-w-md">
+              Curated visual collection of mecha blueprints, battle arenas, card illustrations, and concept production art.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playBeep(920, 0.05);
+                openAdminPanel();
+              }}
+              title="Open Admin Panel to manage gallery"
+              className="px-3 py-1.5 rounded-lg bg-[#0d071a] hover:bg-[#1f1926] text-[#f59e0b] border border-[#f59e0b]/40 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">collections</span>
+              <span>{isAdminAuthenticated ? 'MANAGE GALLERY' : 'ADMIN EDIT'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Bento Art Showcase */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {GALLERY_ITEMS.map((item) => (
+          {galleryItems.map((item) => (
             <HoloCard
               key={item.id}
               onClick={() => handleClick(item)}
