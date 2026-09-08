@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline-xl: 'Sora', sans-serif;
+  --font-headline-lg: 'Sora', sans-serif;
+  --font-headline-md: 'Sora', sans-serif;
+  --font-headline-sm: 'Sora', sans-serif;
+  --font-display-hero: 'Sora', sans-serif;
+  --font-body-lg: 'Space Grotesk', sans-serif;
+  --font-body-md: 'Space Grotesk', sans-serif;
+  --font-body-sm: 'Space Grotesk', sans-serif;
+  --font-label-lg: 'JetBrains Mono', monospace;
+  --font-label-md: 'JetBrains Mono', monospace;
+  --font-label-tech: 'JetBrains Mono', monospace;
+
+  --color-void-base: #06030c;
+  --color-void-elevated: #0d071a;
+  --color-void-surface: #140c26;
+  --color-surface-container-lowest: #110c18;
+  --color-surface-container-low: #1f1926;
+  --color-surface-container: #231d2a;
+  --color-surface-container-high: #2d2734;
+  --color-surface-container-highest: #383240;
+  --color-surface-bright: #3d3744;
+
+  --color-neon-purple: #a855f7;
+  --color-neon-violet-light: #c084fc;
+  --color-energy-cyan: #38bdf8;
+  --color-energy-blue: #60a5fa;
+  --color-holo-teal: #2dd4bf;
+  --color-warning-amber: #f59e0b;
+
+  --color-hud-white: #f8fafc;
+  --color-hud-muted: #94a3b8;
+  --color-on-surface: #eadff0;
+  --color-on-surface-variant: #cfc2d6;
+
+  --color-primary: #ddb7ff;
+  --color-primary-container: #b76dff;
+  --color-on-primary-container: #400071;
+  --color-on-primary: #490080;
+  --color-secondary: #7bd0ff;
+  --color-secondary-container: #00a6e0;
+  --color-tertiary: #ddb8ff;
+  --color-tertiary-fixed: #f0dbff;
+  --color-tertiary-container: #b175ec;
+  --color-error: #ffb4ab;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: #06030c;
+  color: #eadff0;
+  overflow-x: hidden;
+}
+
+/* Custom utility styles */
+.perspective-card-wrapper {
+  perspective: 1000px;
+}
+
+.holo-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease-out;
+  will-change: transform;
+  position: relative;
+}
+
+.holo-glare-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(56,189,248,0.4) 0%, rgba(168,85,247,0.3) 30%, transparent 70%);
+  mix-blend-mode: color-dodge;
+  transition: opacity 0.3s ease;
+  z-index: 25;
+}
+
+.holo-3d-card:hover .holo-glare-layer {
+  opacity: 1;
+}
+
+.pulse-shockwave {
+  animation: shockwavePulse 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes shockwavePulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(168,85,247,0.8); }
+  50% { transform: scale(1.04); box-shadow: 0 0 35px 8px rgba(56,189,248,0.7); }
+  100% { transform: scale(1); box-shadow: 0 0 10px 0 rgba(168,85,247,0); }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06030c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #231d2a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
